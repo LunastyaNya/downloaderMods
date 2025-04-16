@@ -1,2 +1,11 @@
 # downloaderMods
-Downloader Mods script on python
+Автозагрузчик модов для Minecraft.
+
+### Использование
+После запуска кода у вас на рабочем столе появится два файла:
+> settings.json
+not_found_mods.json
+
+В settings.json находятся пути, а также сами моды, которые
+нужно будет установить, в not_found_mods.json будут записаны
+моды, которые пока недоступны на новые версии.
