@@ -3,8 +3,9 @@
 
 ### Использование
 После запуска кода у вас на рабочем столе появится два файла:
-> settings.json
-not_found_mods.json
+
+- *settings.json*
+- *not_found_mods.json*
 
 В settings.json находятся пути, а также сами моды, которые
 нужно будет установить, в not_found_mods.json будут записаны
