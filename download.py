@@ -30,19 +30,7 @@ def downJar(url, path, filename):
 def downloadfromModrinth(modname, modloader, gameVersion, numb):
     search_url = f'https://api.modrinth.com/v2/project/{modname}/version?loaders=["{modloader}"]&game_versions=["{gameVersion}"]'  # slug=modname
 
-    if os.name == "nt":
-        username = os.getlogin()
-        dir_nff = f"C:/users/{username}/desktop"
-    else:
-        dir_nff = os.path.join(pathlib.Path.home(), "Рабочий стол")
-        if not os.path.exists(dir_nff):
-            dir_nff = os.path.join(pathlib.Path.home(), "Desktop")
-
-    with open(f"{dir_nff}/settings.json", "r") as f:
-        config = json.load(f)
-
-    not_found_file = config["not_found_file"]
-    default_dir = config["default_dir"]
+    directory = os.path.dirname(os.path.abspath(__file__))
 
     try:
         r = requests.get(search_url)
@@ -68,24 +56,24 @@ def downloadfromModrinth(modname, modloader, gameVersion, numb):
             print(f"{RED}Ошибка! {modname} нет на эту версию{RESET}")
 
             try:
-                with open(not_found_file, "r") as f:
+                with open(directory + "/not_found_mods.json", "r") as f:
                     not_found_mods = json.load(f)
             except (FileNotFoundError, json.JSONDecodeError):
                 not_found_mods = {}
 
             not_found_mods[str(numb)] = modname
 
-            with open(not_found_file, "w") as f:
+            with open(directory + "/not_found_mods.json", "w") as f:
                 json.dump(not_found_mods, f, indent=4)
 
             delJSON()
             return
 
         filename = wget.detect_filename(fileurl)
-        downJar(fileurl, f"{default_dir}", filename=filename)
+        downJar(fileurl, f"{directory}/mods", filename=filename)
 
         filename = urllib.parse.unquote(filename)
-        os.rename(f"{default_dir}/{filename}", f"{default_dir}/{numb}. {modname}.jar")
+        os.rename(f"{directory}/mods/{filename}", f"{directory}/mods/{numb}. {modname}.jar")
 
         print(f"{GREEN}Мод {numb}. {modname} загружен{RESET}")
 

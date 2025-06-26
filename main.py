@@ -4,25 +4,16 @@ from download import downloadMod
 import pathlib
 from colorama import init, Fore
 init(autoreset=True)
+directory = os.path.dirname(os.path.abspath(__file__))
 
-def def_dir():
-    if os.name == "nt":
-        username = os.getlogin()
-        dir_nff = f"C:/users/{username}/desktop"
-    else:
-        dir_nff = os.path.join(pathlib.Path.home(), "Рабочий стол")
-        if not os.path.exists(dir_nff):
-            dir_nff = os.path.join(pathlib.Path.home(), "Desktop")
-    return dir_nff
+folder_path = os.path.join(directory, "mods")
+if not os.path.exists(folder_path): os.makedirs(folder_path)
 
 def create_json():
-    dir_nff = def_dir()
-    settings_path = os.path.join(dir_nff, "settings.json")
+    settings_path = os.path.join(directory, "settings.json")
 
     default_settings = {
         "version": "1.21.5",
-        "not_found_file": dir_nff + "/not_found_mods.json",
-        "default_dir": dir_nff,
         "mods": {
             1: "stendhal",
             2: "sodium"
@@ -30,7 +21,7 @@ def create_json():
     }
 
     if not os.path.exists(settings_path):
-        with open(settings_path, "w") as f:
+        with open(settings_path, "w", encoding="utf-8") as f:
             json.dump(default_settings, f, indent=4, ensure_ascii=False)
         print(f"Файл settings.json успешно создан по пути: {settings_path}")
     else:
@@ -38,15 +29,14 @@ def create_json():
 
 create_json()
 
-with open(f"{def_dir()}/settings.json", "r") as f:
+with open(f"{directory}/settings.json", "r") as f:
     config = json.load(f)
 
-# Извлекаем переменные
 VERSION = config["version"]
 MODLOADER = "fabric"
 
-not_found_file = config["not_found_file"]
-default_dir = config["default_dir"]
+not_found_file = directory + "/not_found_mods.json"
+default_dir = directory
 mods = config["mods"]
 
 with open(not_found_file, "w") as f:
