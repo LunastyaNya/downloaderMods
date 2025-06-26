@@ -39,8 +39,9 @@ not_found_file = directory + "/not_found_mods.json"
 default_dir = directory
 mods = config["mods"]
 
-with open(not_found_file, "w") as f:
-    json.dump({}, f, indent=4)
+if not os.path.exists(not_found_file):
+    with open(not_found_file, "w", encoding="utf-8") as f:
+        json.dump({}, f, indent=4, ensure_ascii=False)
 
 def downloadMods():
     for numb_str, modname in mods.items():
@@ -52,8 +53,7 @@ def not_found_mods():
 
     for key, modname in not_found_mods.items():
         numb_str = key
-        numb = int(numb_str)
-        downloadMod(modname, MODLOADER, VERSION, numb)
+        downloadMod(modname, MODLOADER, VERSION, numb_str)
 
 def recreate_not_found_file():
     if os.path.exists(not_found_file):
