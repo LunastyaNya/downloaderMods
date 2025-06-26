@@ -2,6 +2,8 @@ import json
 import os
 from download import downloadMod
 import pathlib
+from colorama import init, Fore
+init(autoreset=True)
 
 def def_dir():
     if os.name == "nt":
@@ -51,22 +53,8 @@ with open(not_found_file, "w") as f:
     json.dump({}, f, indent=4)
 
 def downloadMods():
-    # ФАЙЛЫ download.py и not_found_mods.py не изменять!
-
-    # Как правильно заполнять форму установки модов?
-    # Для начала напишите downloadMod()
-    # Внутри скобок напишите следующие переменные:
-    # modname - Название мода со странички modrinth'a.
-    # Например у мода Sodium ссылка https://modrinth.com/mod/sodium значит его имя sodium.
-    # Писать обязательно в кавычках
-    # MODLOADER, VERSION - обязательные переменные. Их оставляем без изменений
-    # Последняя переменная numb. Это порядковый номер мода. Допустим
-    # Мы установим моду Sodium numb равным 1. Это значит, что мод
-    # Сохранится в папку с названием "1. sodium.jar"
-
     for numb_str, modname in mods.items():
-        numb = int(numb_str)  # Преобразуем ключ в число
-        downloadMod(modname, MODLOADER, VERSION, numb)
+        downloadMod(modname, MODLOADER, VERSION, numb_str)
 
 def not_found_mods():
     with open(not_found_file, "r") as f:
@@ -84,14 +72,14 @@ def recreate_not_found_file():
     with open(not_found_file, "w") as f:
         json.dump({}, f, indent=4)
 
-    print(f"\033[92mФайл not_found_file.json пересоздан.")
+    print(Fore.BLUE + f"Файл not_found_file.json пересоздан.")
 
 def main():
-    print("\033[95mУстановщик модов by Lunastya \033[96m(forked v-pun215 (Downrinth))")
-    print("\033[95mВыберите функцию:")
-    print("\033[93m1. Автоустановщик модов")
-    print("\033[93m2. Повторная проверка незагруженных модов")
-    print("\033[93m3. Пересоздание файла not_found_mods.json")
+    print(Fore.MAGENTA + f"Установщик модов by Lunastya" + " " + Fore.CYAN + "(forked v-pun215 (Downrinth))")
+    print(Fore.MAGENTA + f"Выберите функцию:")
+    print(Fore.YELLOW + f"1. Автоустановщик модов")
+    print(Fore.YELLOW + f"2. Повторная проверка незагруженных модов")
+    print(Fore.YELLOW + f"3. Пересоздание файла not_found_mods.json")
     choice = input()
     if choice == "1":
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -102,7 +90,7 @@ def main():
     elif choice == "3":
         os.system('cls' if os.name == 'nt' else 'clear')
         recreate_not_found_file()
-    else: print("\033[91mОшибка! Выберите 1 или 2")
+    else: print(Fore.RED + f"Ошибка! Выберите 1 или 2")
 
 if __name__ == "__main__":
     main()
