@@ -6,10 +6,12 @@ import platform
 import json
 import wget
 import urllib.parse
+import sys
 
 RED = "\033[91m"
 GREEN = "\033[92m"
 RESET = "\033[0m"
+
 
 def downJar(url, path, filename):
     if platform.platform().startswith("Windows"):
@@ -27,10 +29,11 @@ def downJar(url, path, filename):
         os.chdir(path)
         os.system(f"wget -q {url}")
 
+
 def downloadfromModrinth(modname, modloader, gameVersion, numb):
     search_url = f'https://api.modrinth.com/v2/project/{modname}/version?loaders=["{modloader}"]&game_versions=["{gameVersion}"]'  # slug=modname
 
-    directory = os.path.dirname(os.path.abspath(__file__))
+    directory = os.path.dirname(sys.executable) if os.name == "nt" else os.path.dirname(os.path.abspath(__file__))
 
     try:
         r = requests.get(search_url)
@@ -65,21 +68,26 @@ def downloadfromModrinth(modname, modloader, gameVersion, numb):
 
             with open(directory + "/not_found_mods.json", "w") as f:
                 json.dump(not_found_mods, f, indent=4)
-
-            delJSON()
             return
 
         filename = wget.detect_filename(fileurl)
         downJar(fileurl, f"{directory}/mods", filename=filename)
 
         filename = urllib.parse.unquote(filename)
-        os.rename(f"{directory}/mods/{filename}", f"{directory}/mods/{numb}. {modname}.jar")
+        if os.name == "nt": filename = filename.replace("+", "%2B")
+
+        try:
+            os.rename(f"{directory}/mods/{filename}", f"{directory}/mods/{numb}. {modname}.jar")
+        except:
+            print(f"{RED}Не вышло переименовать файл!")
 
         print(f"{GREEN}Мод {numb}. {modname} загружен{RESET}")
 
 
 def delJSON():
-    main_file = os.path.join(os.path.dirname(__file__), "mod_details.json")
+    main_file = os.path.join(
+        os.path.dirname(sys.executable) if os.name == "nt" else os.path.dirname(os.path.abspath(__file__)),
+        "mod_details.json")
 
     if os.path.isfile(main_file):
         os.remove(main_file)

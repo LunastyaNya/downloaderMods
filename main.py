@@ -3,8 +3,10 @@ import os
 from download import downloadMod
 import pathlib
 from colorama import init, Fore
+import sys
 init(autoreset=True)
-directory = os.path.dirname(os.path.abspath(__file__))
+
+directory = os.path.dirname(sys.executable) if os.name == "nt" else os.path.dirname(os.path.abspath(__file__))
 
 folder_path = os.path.join(directory, "mods")
 if not os.path.exists(folder_path): os.makedirs(folder_path)
