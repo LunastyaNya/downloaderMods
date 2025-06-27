@@ -31,7 +31,7 @@ def downJar(url, path, filename):
 
 
 def downloadfromModrinth(modname, modloader, gameVersion, numb):
-    search_url = f'https://api.modrinth.com/v2/project/{modname}/version?loaders=["{modloader}"]&game_versions=["{gameVersion}"]'  # slug=modname
+    search_url = f'https://api.modrinth.com/v2/project/{modname}/version?loaders=["{modloader}"]&game_versions=["{gameVersion}"]'
 
     directory = os.path.dirname(sys.executable) if os.name == "nt" else os.path.dirname(os.path.abspath(__file__))
 
