@@ -73,6 +73,19 @@ def downloadfromModrinth(modname, modloader, gameVersion, numb):
         filename = wget.detect_filename(fileurl)
         downJar(fileurl, f"{directory}/mods", filename=filename)
 
+        try:
+            with open(directory + "/not_found_mods.json", "r", encoding="utf-8") as f:
+                not_found_mods = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            not_found_mods = {}
+
+        numb_str = str(numb)
+        if numb_str in not_found_mods:
+            del not_found_mods[numb_str]
+
+        with open(directory + "/not_found_mods.json", "w", encoding="utf-8") as f:
+            json.dump(not_found_mods, f, indent=4, ensure_ascii=False)
+
         filename = urllib.parse.unquote(filename)
         if os.name == "nt": filename = filename.replace("+", "%2B")
 
